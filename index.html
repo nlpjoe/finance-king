@@ -1,0 +1,1079 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>谁是理财王</title>
+  <script src="./app-data.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f5ef;
+      --ink: #1e2428;
+      --muted: #657177;
+      --line: #ded8cb;
+      --panel: #fffdf8;
+      --gold: #b78026;
+      --green: #0f8f61;
+      --red: #c4483b;
+      --blue: #276a9f;
+      --shadow: 0 12px 34px rgba(34, 30, 22, .08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.45;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+    }
+
+    .side {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 24px 20px;
+      background: #242a2e;
+      color: #fffdf8;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .brand {
+      display: grid;
+      gap: 8px;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      background: #d6a13a;
+      color: #1f2428;
+      font-weight: 900;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 26px;
+      letter-spacing: 0;
+    }
+
+    .side p {
+      color: rgba(255, 253, 248, .72);
+      font-size: 14px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav button {
+      width: 100%;
+      border: 0;
+      border-radius: 6px;
+      color: rgba(255, 253, 248, .82);
+      background: transparent;
+      padding: 11px 12px;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .nav button.active,
+    .nav button:hover {
+      background: rgba(255, 253, 248, .12);
+      color: #fffdf8;
+    }
+
+    .rule-note {
+      margin-top: auto;
+      border-top: 1px solid rgba(255, 253, 248, .16);
+      padding-top: 16px;
+      font-size: 13px;
+      color: rgba(255, 253, 248, .68);
+    }
+
+    .main {
+      min-width: 0;
+      padding: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 5px;
+    }
+
+    .topbar h2 {
+      font-size: 28px;
+      letter-spacing: 0;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .button {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel);
+      color: var(--ink);
+      padding: 10px 13px;
+      cursor: pointer;
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .button.primary {
+      border-color: #1f2428;
+      background: #1f2428;
+      color: #fffdf8;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .metric,
+    .panel,
+    .table-wrap {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .metric {
+      padding: 16px;
+      min-height: 104px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 13px;
+      display: block;
+      margin-bottom: 9px;
+    }
+
+    .metric strong {
+      font-size: 26px;
+      letter-spacing: 0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(320px, .8fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 16px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .panel h3 {
+      font-size: 17px;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid #ece7dc;
+      text-align: left;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    td {
+      font-size: 14px;
+    }
+
+    .table-wrap {
+      overflow: auto;
+    }
+
+    .rank {
+      width: 30px;
+      height: 30px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 6px;
+      background: #efe7d5;
+      font-weight: 800;
+      color: #5e431b;
+    }
+
+    .rank.top {
+      background: #d6a13a;
+      color: #1f2428;
+    }
+
+    .positive {
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    .negative {
+      color: var(--red);
+      font-weight: 800;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid #d9d1c2;
+      background: #f6f1e8;
+      color: #5d615e;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .pill.ok {
+      border-color: rgba(15, 143, 97, .25);
+      background: rgba(15, 143, 97, .09);
+      color: var(--green);
+    }
+
+    .pill.warn {
+      border-color: rgba(196, 72, 59, .24);
+      background: rgba(196, 72, 59, .09);
+      color: var(--red);
+    }
+
+    .forms {
+      display: grid;
+      gap: 14px;
+    }
+
+    form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    input,
+    select {
+      min-width: 0;
+      height: 40px;
+      border: 1px solid #d9d1c2;
+      border-radius: 6px;
+      background: #fff;
+      color: var(--ink);
+      padding: 8px 10px;
+    }
+
+    input:focus,
+    select:focus,
+    button:focus-visible {
+      outline: 3px solid rgba(39, 106, 159, .18);
+      border-color: var(--blue);
+    }
+
+    .checks {
+      display: grid;
+      gap: 9px;
+    }
+
+    .check-row {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 10px;
+      border-radius: 8px;
+      background: #f8f3ea;
+      border: 1px solid #ebe4d7;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-top: 6px;
+      background: var(--green);
+    }
+
+    .dot.warn {
+      background: var(--red);
+    }
+
+    .check-row strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    .check-row span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .trade-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .trade-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 11px;
+      border-radius: 8px;
+      border: 1px solid #ebe4d7;
+      background: #fffaf1;
+    }
+
+    .trade-item strong {
+      font-size: 14px;
+    }
+
+    .trade-item p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .empty {
+      padding: 18px;
+      color: var(--muted);
+      border: 1px dashed #d8d0c0;
+      border-radius: 8px;
+      text-align: center;
+      background: #fffaf1;
+    }
+
+    @media (max-width: 980px) {
+      .app-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .side {
+        position: static;
+        height: auto;
+        padding: 18px;
+      }
+
+      .nav {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .nav button {
+        text-align: center;
+      }
+
+      .rule-note {
+        display: none;
+      }
+
+      .main {
+        padding: 18px;
+      }
+
+      .metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .topbar {
+        display: grid;
+      }
+
+      .actions {
+        justify-content: stretch;
+      }
+
+      .actions .button {
+        flex: 1 1 auto;
+      }
+
+      .metrics,
+      .form-grid,
+      .nav {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar h2 {
+        font-size: 23px;
+      }
+
+      .metric strong {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="side">
+      <div class="brand">
+        <div class="brand-mark">财</div>
+        <div>
+          <h1>谁是理财王</h1>
+          <p>朋友赛记分牌</p>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="主导航">
+        <button class="active" data-tab="dashboard">排行榜</button>
+        <button data-tab="players">参赛者</button>
+        <button data-tab="trades">交易记录</button>
+        <button data-tab="rules">规则检查</button>
+      </nav>
+
+      <p class="rule-note">按收益率排名，不按绝对盈利排名。所有交易会尝试换算成10万元标准账户，检查是否可复现。</p>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <div class="eyebrow">STANDARD ACCOUNT: 100,000 CNY</div>
+          <h2 id="page-title">排行榜</h2>
+          <p class="hint">先做成网页样机，之后可以升级成多人在线版或微信小程序。</p>
+        </div>
+        <div class="actions">
+          <a class="button" href="./第一届谁是理财王_参赛选手填报模板.xlsx" download>下载填报表</a>
+          <button class="button" id="exportBtn">导出数据</button>
+          <button class="button" id="resetBtn">载入Excel</button>
+          <button class="button primary" data-tab-jump="players">添加选手</button>
+        </div>
+      </div>
+
+      <section class="section active" id="dashboard">
+        <div class="metrics">
+          <div class="metric">
+            <span>参赛人数</span>
+            <strong id="metricPlayers">0</strong>
+          </div>
+          <div class="metric">
+            <span>领先收益率</span>
+            <strong id="metricBest">0%</strong>
+          </div>
+          <div class="metric">
+            <span>标准账户最高资产</span>
+            <strong id="metricStandard">¥0</strong>
+          </div>
+          <div class="metric">
+            <span>待复核交易</span>
+            <strong id="metricWarnings">0</strong>
+          </div>
+        </div>
+
+        <div class="layout">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>排名</th>
+                  <th>选手</th>
+                  <th>期初申报</th>
+                  <th>当前资产</th>
+                  <th>收益率</th>
+                  <th>10万元标准账户</th>
+                  <th>状态</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboardBody"></tbody>
+            </table>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3>本周看板</h3>
+              <span class="pill ok">自动排名</span>
+            </div>
+            <div class="checks" id="weeklyChecks"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="players">
+        <div class="layout">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>添加或更新参赛者</h3>
+              <span class="hint">期初资产用于归一化排名</span>
+            </div>
+            <form id="playerForm">
+              <div class="form-grid">
+                <label>
+                  姓名
+                  <input name="name" required placeholder="例如：阿林">
+                </label>
+                <label>
+                  期初申报资产
+                  <input name="initial" required type="number" min="1" step="0.01" placeholder="50000">
+                </label>
+                <label>
+                  当前总资产
+                  <input name="current" required type="number" min="0" step="0.01" placeholder="53600">
+                </label>
+                <label>
+                  开赛状态
+                  <select name="cleanStart">
+                    <option value="true">已确认零持仓</option>
+                    <option value="false">待确认</option>
+                  </select>
+                </label>
+              </div>
+              <button class="button primary" type="submit">保存参赛者</button>
+            </form>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>选手</th>
+                  <th>收益率</th>
+                  <th>零持仓</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="playersBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="trades">
+        <div class="layout">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>记录交易</h3>
+              <span class="hint">用于检查10万元可复现性</span>
+            </div>
+            <form id="tradeForm">
+              <div class="form-grid">
+                <label>
+                  选手
+                  <select name="playerId" id="tradePlayer"></select>
+                </label>
+                <label>
+                  类型
+                  <select name="type">
+                    <option value="买入">买入</option>
+                    <option value="卖出">卖出</option>
+                    <option value="新股申购">新股申购</option>
+                    <option value="可转债申购">可转债申购</option>
+                    <option value="大宗交易">大宗交易</option>
+                  </select>
+                </label>
+                <label>
+                  标的代码
+                  <input name="symbol" required placeholder="600000">
+                </label>
+                <label>
+                  成交价
+                  <input name="price" required type="number" min="0" step="0.001" placeholder="12.30">
+                </label>
+                <label>
+                  数量
+                  <input name="quantity" required type="number" min="1" step="1" placeholder="1000">
+                </label>
+                <label>
+                  交易日期
+                  <input name="date" required type="date">
+                </label>
+              </div>
+              <button class="button primary" type="submit">保存交易</button>
+            </form>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3>最近交易</h3>
+              <span class="hint">高风险项会标红</span>
+            </div>
+            <div class="trade-list" id="tradeList"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="rules">
+        <div class="layout">
+          <div class="panel">
+            <div class="panel-head">
+              <h3>规则检查</h3>
+              <span class="pill">半自动</span>
+            </div>
+            <div class="checks" id="ruleChecks"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <h3>核心规则摘要</h3>
+            </div>
+            <div class="checks">
+              <div class="check-row">
+                <div class="dot"></div>
+                <div>
+                  <strong>资金自主申报</strong>
+                  <span>排名统一看收益率和10万元标准账户，不看本金大小。</span>
+                </div>
+              </div>
+              <div class="check-row">
+                <div class="dot"></div>
+                <div>
+                  <strong>净现金入场</strong>
+                  <span>比赛开始日必须空仓，仅保留现金。</span>
+                </div>
+              </div>
+              <div class="check-row">
+                <div class="dot"></div>
+                <div>
+                  <strong>10万元可复现性</strong>
+                  <span>买入金额按比例缩到10万元账户后，至少能买1手。</span>
+                </div>
+              </div>
+              <div class="check-row">
+                <div class="dot warn"></div>
+                <div>
+                  <strong>禁止门槛套利</strong>
+                  <span>新股、可转债、大宗交易等需要人工直接判违规。</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "finance-king-demo";
+    const STANDARD_CAPITAL = 100000;
+
+    const sampleData = {
+      source: {
+        type: "sample",
+        name: "内置示例数据"
+      },
+      players: [
+        { id: "p1", name: "阿林", initial: 50000, current: 59200, cleanStart: true },
+        { id: "p2", name: "小周", initial: 120000, current: 130800, cleanStart: true },
+        { id: "p3", name: "老陈", initial: 300000, current: 291600, cleanStart: false }
+      ],
+      trades: [
+        { id: "t1", playerId: "p1", type: "买入", symbol: "510300", price: 4.18, quantity: 6000, date: "2026-05-24" },
+        { id: "t2", playerId: "p2", type: "买入", symbol: "贵州茅台", price: 1680, quantity: 100, date: "2026-05-24" },
+        { id: "t3", playerId: "p3", type: "可转债申购", symbol: "某转债", price: 100, quantity: 100, date: "2026-05-24" }
+      ]
+    };
+
+    let state = loadState();
+
+    function loadState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return getDefaultData();
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return getDefaultData();
+      }
+    }
+
+    function getDefaultData() {
+      const imported = window.FINANCE_KING_DATA;
+      return structuredClone(imported || sampleData);
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function money(value) {
+      return new Intl.NumberFormat("zh-CN", {
+        style: "currency",
+        currency: "CNY",
+        maximumFractionDigits: 0
+      }).format(value || 0);
+    }
+
+    function pct(value) {
+      return `${(value * 100).toFixed(2)}%`;
+    }
+
+    function getReturn(player) {
+      return player.initial > 0 ? player.current / player.initial - 1 : 0;
+    }
+
+    function getStandardAsset(player) {
+      return STANDARD_CAPITAL * (1 + getReturn(player));
+    }
+
+    function getPlayer(id) {
+      return state.players.find((player) => player.id === id);
+    }
+
+    function checkTrade(trade) {
+      const player = getPlayer(trade.playerId);
+      if (!player) return { ok: false, label: "找不到选手", detail: "这笔交易需要重新关联参赛者。" };
+
+      if (["新股申购", "可转债申购", "大宗交易"].includes(trade.type)) {
+        return { ok: false, label: "禁止交易类型", detail: `${trade.type}属于资金门槛套利风险，建议直接判违规。` };
+      }
+
+      if (trade.type === "买入") {
+        const oneLotCost = Number(trade.price) * 100;
+        const scaledCash = STANDARD_CAPITAL / Number(player.initial) * Number(trade.price) * Number(trade.quantity);
+
+        if (oneLotCost > STANDARD_CAPITAL) {
+          return { ok: false, label: "高价股不可复现", detail: `1手需要${money(oneLotCost)}，超过10万元标准账户。` };
+        }
+
+        if (scaledCash < oneLotCost) {
+          return { ok: false, label: "缩放后不足1手", detail: `等比缩放后买入金额约${money(scaledCash)}，不足1手成本${money(oneLotCost)}。` };
+        }
+      }
+
+      return { ok: true, label: "通过", detail: "这笔交易初步符合10万元可复现性。" };
+    }
+
+    function render() {
+      renderMetrics();
+      renderLeaderboard();
+      renderPlayers();
+      renderTradeOptions();
+      renderTrades();
+      renderRules();
+      saveState();
+    }
+
+    function renderMetrics() {
+      const ranked = [...state.players].sort((a, b) => getReturn(b) - getReturn(a));
+      const best = ranked[0];
+      const warnings = state.trades.filter((trade) => !checkTrade(trade).ok).length
+        + state.players.filter((player) => !player.cleanStart || player.hasReport === false).length;
+
+      document.getElementById("metricPlayers").textContent = state.players.length;
+      document.getElementById("metricBest").textContent = best ? pct(getReturn(best)) : "0%";
+      document.getElementById("metricStandard").textContent = best ? money(getStandardAsset(best)) : money(0);
+      document.getElementById("metricWarnings").textContent = warnings;
+
+      const sourceName = state.source?.name || "本地数据";
+      document.querySelector(".hint").textContent = `当前数据：${sourceName}。排行榜按期末资产 / 期初申报资产计算。`;
+    }
+
+    function renderLeaderboard() {
+      const tbody = document.getElementById("leaderboardBody");
+      const ranked = [...state.players].sort((a, b) => getReturn(b) - getReturn(a));
+
+      tbody.innerHTML = ranked.map((player, index) => {
+        const value = getReturn(player);
+        const trendClass = value >= 0 ? "positive" : "negative";
+        const status = player.hasReport === false
+          ? '<span class="pill warn">待报数</span>'
+          : player.cleanStart
+            ? '<span class="pill ok">可排名</span>'
+            : '<span class="pill warn">待确认空仓</span>';
+
+        return `
+          <tr>
+            <td><span class="rank ${index === 0 ? "top" : ""}">${index + 1}</span></td>
+            <td><strong>${escapeHtml(player.name)}</strong></td>
+            <td>${money(player.initial)}</td>
+            <td>${money(player.current)}</td>
+            <td class="${trendClass}">${pct(value)}</td>
+            <td>${money(getStandardAsset(player))}</td>
+            <td>${status}</td>
+          </tr>
+        `;
+      }).join("");
+
+      document.getElementById("weeklyChecks").innerHTML = [
+        {
+          ok: ranked.every((player) => player.cleanStart),
+          title: "净现金入场",
+          text: ranked.every((player) => player.cleanStart) ? "所有参赛者都已确认零持仓。" : "仍有人没有确认开赛日零持仓。"
+        },
+        {
+          ok: ranked.every((player) => player.hasReport !== false),
+          title: "本期填报",
+          text: ranked.every((player) => player.hasReport !== false) ? "所有参赛者已有本期总计。" : "仍有人没有填写本期总计，暂按0%显示。"
+        },
+        {
+          ok: state.trades.every((trade) => checkTrade(trade).ok),
+          title: "交易可复现性",
+          text: "系统会按10万元账户检查买入门槛。"
+        },
+        {
+          ok: true,
+          title: "收益率归一",
+          text: "当前排名按期末资产 / 期初申报资产计算。"
+        }
+      ].map(checkTemplate).join("");
+    }
+
+    function renderPlayers() {
+      const tbody = document.getElementById("playersBody");
+      tbody.innerHTML = state.players.map((player) => {
+        const value = getReturn(player);
+        return `
+          <tr>
+            <td><strong>${escapeHtml(player.name)}</strong></td>
+            <td class="${value >= 0 ? "positive" : "negative"}">${pct(value)}</td>
+            <td>${player.cleanStart && player.hasReport !== false ? '<span class="pill ok">已确认</span>' : '<span class="pill warn">待补充</span>'}</td>
+            <td><button class="button" data-delete-player="${player.id}">删除</button></td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderTradeOptions() {
+      const select = document.getElementById("tradePlayer");
+      select.innerHTML = state.players.map((player) => `<option value="${player.id}">${escapeHtml(player.name)}</option>`).join("");
+    }
+
+    function renderTrades() {
+      const list = document.getElementById("tradeList");
+      if (!state.trades.length) {
+        list.innerHTML = '<div class="empty">还没有交易记录</div>';
+        return;
+      }
+
+      list.innerHTML = state.trades.slice().reverse().map((trade) => {
+        const player = getPlayer(trade.playerId);
+        const result = checkTrade(trade);
+        return `
+          <div class="trade-item">
+            <div>
+              <strong>${escapeHtml(player?.name || "未知")} · ${escapeHtml(trade.type)} ${escapeHtml(trade.symbol)}</strong>
+              <p>${trade.date} · ${money(Number(trade.price))} × ${Number(trade.quantity).toLocaleString("zh-CN")}</p>
+            </div>
+            <span class="pill ${result.ok ? "ok" : "warn"}">${result.label}</span>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderRules() {
+      const rows = [];
+
+      state.players.forEach((player) => {
+        if (player.hasReport === false) {
+          rows.push({
+            ok: false,
+            title: `${player.name} · 本期填报`,
+            text: "Excel中没有读到总计金额，当前暂按10万元起点显示0%。"
+          });
+        }
+
+        rows.push({
+          ok: player.cleanStart,
+          title: `${player.name} · 净现金入场`,
+          text: player.cleanStart ? "已确认开赛日零持仓。" : "需要补充开赛日截图或管理员确认。"
+        });
+      });
+
+      state.trades.forEach((trade) => {
+        const player = getPlayer(trade.playerId);
+        const result = checkTrade(trade);
+        rows.push({
+          ok: result.ok,
+          title: `${player?.name || "未知"} · ${trade.type} ${trade.symbol}`,
+          text: result.detail
+        });
+      });
+
+      document.getElementById("ruleChecks").innerHTML = rows.length ? rows.map(checkTemplate).join("") : '<div class="empty">暂无规则检查项</div>';
+    }
+
+    function checkTemplate(item) {
+      return `
+        <div class="check-row">
+          <div class="dot ${item.ok ? "" : "warn"}"></div>
+          <div>
+            <strong>${escapeHtml(item.title)}</strong>
+            <span>${escapeHtml(item.text)}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    document.querySelectorAll("[data-tab], [data-tab-jump]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const tab = button.dataset.tab || button.dataset.tabJump;
+        document.querySelectorAll(".nav button").forEach((navButton) => {
+          navButton.classList.toggle("active", navButton.dataset.tab === tab);
+        });
+        document.querySelectorAll(".section").forEach((section) => {
+          section.classList.toggle("active", section.id === tab);
+        });
+        const titles = { dashboard: "排行榜", players: "参赛者", trades: "交易记录", rules: "规则检查" };
+        document.getElementById("page-title").textContent = titles[tab];
+      });
+    });
+
+    document.getElementById("playerForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const form = new FormData(event.currentTarget);
+      const name = form.get("name").trim();
+      const existing = state.players.find((player) => player.name === name);
+      const payload = {
+        name,
+        initial: Number(form.get("initial")),
+        current: Number(form.get("current")),
+        cleanStart: form.get("cleanStart") === "true"
+      };
+
+      if (existing) {
+        Object.assign(existing, payload);
+      } else {
+        state.players.push({ id: crypto.randomUUID(), ...payload });
+      }
+
+      event.currentTarget.reset();
+      render();
+    });
+
+    document.getElementById("tradeForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const form = new FormData(event.currentTarget);
+      state.trades.push({
+        id: crypto.randomUUID(),
+        playerId: form.get("playerId"),
+        type: form.get("type"),
+        symbol: form.get("symbol").trim(),
+        price: Number(form.get("price")),
+        quantity: Number(form.get("quantity")),
+        date: form.get("date")
+      });
+      event.currentTarget.reset();
+      document.querySelector("[name='date']").valueAsDate = new Date();
+      render();
+    });
+
+    document.addEventListener("click", (event) => {
+      const deleteId = event.target.dataset.deletePlayer;
+      if (!deleteId) return;
+      state.players = state.players.filter((player) => player.id !== deleteId);
+      state.trades = state.trades.filter((trade) => trade.playerId !== deleteId);
+      render();
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      state = getDefaultData();
+      render();
+    });
+
+    document.getElementById("exportBtn").addEventListener("click", async () => {
+      const data = JSON.stringify(state, null, 2);
+      await navigator.clipboard.writeText(data);
+      alert("比赛数据已复制到剪贴板。");
+    });
+
+    document.querySelector("[name='date']").valueAsDate = new Date();
+    render();
+  </script>
+</body>
+</html>
